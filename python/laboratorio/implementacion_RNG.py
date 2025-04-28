@@ -75,6 +75,7 @@ def dC_dy(y,z):
     return y-z
 
 # Retropropagacion
+# Todo
 def backward(x, z, W, b, cache, deriv_activacion, dC_dy):
     # dC_dW = [dC_dW(0), ... , dC_dW(L-1)]
     #         d(0) x d(1)     d(L-1) x d(L)
@@ -90,6 +91,7 @@ def backward(x, z, W, b, cache, deriv_activacion, dC_dy):
         dC_db.append(-delta_l)
     return dC_dW, dC_db
 
+# Todo
 def train(x_train, z_train, W, b, activacion, d_activacion, epocas, learning_rate):
     n = x_train.shape[0]
     costos = []
