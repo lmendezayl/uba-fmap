@@ -49,16 +49,17 @@ def forward(x, W, b,
             activacion: Callable[[list[float]], list[float]]):
     
     # Inicializamos listas 
+    a = x
     xx: list = [x]
     ss: list = []
     
     for i in range(len(W) - 1):
-        s = W[i].T @ x - b[i]
+        s = W[i].T @ a - b[i]
         ss.append(s)
-        x = activacion(s)
-        xx.append(x)
+        a = activacion(s)
+        xx.append(a)
         
-    y = W[-1].T @ x - b[-1]
+    y = W[-1].T @ a - b[-1]
     xx.append(y)
     ss.append(y)
     
@@ -166,17 +167,18 @@ def graficar_costo(costos, fraccion=0.5):
     plt.show()
 
 # Hiperparametros y arquitectura
-d=[1,100,100,100,1]
+d=[1,210, 210,1]
 W, b = _init(d, seed=42) 
+graficar_red(W, b, relu)
 
 x_train, z_train = generar_datos(100)
-W, b, costos = train(x_train, z_train, W, b, activacion=sigmoide, deriv_activacion=d_sigmoide, epocas=1000, eta=0.01)
+W, b, costos = train(x_train, z_train, W, b, activacion=tanh, deriv_activacion=d_tanh, epocas=1000, eta=0.01)
 #graficar_costo(costos, fraccion=0.4)
 
 # Graficar la aproximación
-x_test = np.linspace(0, 1, 200).reshape(1, 200)
-y_test = np.sin(2 * np.pi * x_test)+ 0.5*np.cos(3*np.pi*x_test)
-y_pred, _ = forward(x_test, W, b, activacion=sigmoide)
+x_test = np.linspace(0, 1, 100).reshape(1, 100)
+y_test = np.sin(2 * np.pi * x_test)
+y_pred, _ = forward(x_test, W, b, activacion=tanh)
 
 plt.plot(x_test.flatten(), y_test.flatten(), label="Target")
 plt.plot(x_test.flatten(), y_pred.flatten(), label="Predicción")
