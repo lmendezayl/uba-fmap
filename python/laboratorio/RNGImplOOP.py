@@ -38,36 +38,36 @@ class NeuralNetwork:
     def forward(self):
     
         # Inicializamos listas 
-        a = x
-        xx: list = [x]
+        a = self.x_train
+        xx: list = [self.x_train]
         ss: list = []
         
-        for i in range(len(W) - 1):
-            s = W[i].T @ a - b[i]
+        for i in range(len(self.W) - 1):
+            s = self.W[i].T @ a - self.b[i]
             ss.append(s)
             a = self.activation(s)
             xx.append(a)
             
-        y = W[-1].T @ a - b[-1]
+        y = self.W[-1].T @ a - self.b[-1]
         xx.append(y)
         ss.append(y)
         
         return y, (xx, ss)        
     
     # Backpropagation - ingresa entrada x, objetivo z, pesos W, sesgos b, cache = (xx, ss)
-    def backward(self, z, W, cache, deriv_activacion: Callable, dC_dy: Callable):
+    def backward(self, cache):
         
         # Inicializamos variables
         xx: list = cache[0]
         s: list = cache[1]
-        L: int = len(W) # numero de capas
+        L: int = len(self.W) # numero de capas
 
         # Inicializamos listas de matrices de derivadas de pesos y sesgos por capa 
         dC_dW: list = [None] * L
         dC_db: list = [None] * L
         
         # Delta de la ultima capa, al parecer son lineales, preguntar porque hace esto
-        delta = dC_dy(xx[L],z) # aca Bonder no usa la d_act(s)
+        delta = self.cost_deriv(xx[L],self.z_train) # aca Bonder no usa la d_act(s)
         dC_dW[-1] = xx[-2] @ delta.T
         dC_db[-1] = 0
         
